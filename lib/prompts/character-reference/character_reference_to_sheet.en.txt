@@ -10,7 +10,7 @@ Only if no explicit style instruction is provided, you may preserve the original
 ## Generation rules
 1. Ignore the original image color cast and lighting defects
 2. Use clean, soft studio lighting
-3. Keep natural, aesthetically correct body proportions
+3. Preserve the character's body proportions from the reference image exactly (including chibi, Q-version, or any stylized proportions)
 4. Do not copy blur, noise, compression artifacts, or defects
 5. Output must be clear, sharp, and production-quality
 6. Character expression should be neutral and calm, looking at camera
