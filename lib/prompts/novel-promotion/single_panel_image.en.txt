@@ -10,6 +10,45 @@ Absolute constraints:
 Aspect ratio (must be exact):
 {aspect_ratio}
 
+Reference image rules:
+- Character references: use for appearance, clothing, facial features, body type.
+- Proportion preservation: If the character in the reference image uses a chibi, 2-head-ratio, 3-head-ratio or other special proportion style, you must strictly maintain the same body proportion style. Do not adjust to normal human proportions.
+- Scene references: use only for layout style and atmosphere; repaint for the current shot.
+- Repaint the background according to shot type and angle.
+- Close-up/detail shots should use blurred or minimal backgrounds.
+
+[Shot Composition Rules - Control the Image Directly]
+
+Determine the composition strictly from shot_type and camera_move in the panel data:
+
+**Shot Size → Character Scale in Frame** (most important!):
+- Extreme long shot / Long shot: character ≤ 1/4 of frame height, emphasize environment
+- Full shot: character 1/2–2/3 of frame height, show full body with surroundings
+- Medium shot: character 2/3–3/4 of frame height, frame from mid-thigh up, emphasize action/interaction
+- Close-up: character 3/4+ of frame height, frame from chest up, emphasize facial expression
+- Extreme close-up: single detail (eyes/lips/fingers) fills 80%+ of frame, nearly no background
+- Macro detail: a single tiny detail fills the entire frame
+
+**Camera Angle → Camera Height**:
+- Eye level: camera at subject's eye height, horizon line at frame middle
+- Low angle: camera looks up from below, subject appears tall/imposing, more sky/ceiling
+- High angle: camera looks down from above, subject appears small, more ground/floor
+- Dutch angle: frame tilted 15–30 degrees, creates unease
+- Over-the-shoulder: foreground shows another person's shoulder/back of head, subject on opposite side
+
+**Character Layout**:
+- Single person: place at golden ratio point (~1/3 or 2/3), avoid dead center (except close-ups)
+- Two-person dialogue: symmetric left-right, each ~1/3 width, dialogue space in middle
+- Multiple people: arrange in depth, main character closest and sharpest, others further and slightly blurred
+- Close-up/near shot: face in upper 1/3 of frame
+
+**Self-check before generating**:
+1. Is shot_type "close-up" → is the character large enough (80%+ of frame)?
+2. Is shot_type "long shot" → is the environment prominent (character ≤ 1/4)?
+3. Is camera_move "low angle" → is the horizon low in frame?
+4. How many characters does the description mention → does the count match?
+5. Does the overall composition have a clear visual focal point?
+
 Storyboard panel data:
 {storyboard_text_json_input}
 
@@ -21,10 +60,11 @@ Style requirement:
 
 Execution rules:
 1. Respect panel composition, character placement, and action logic.
-2. If storyboard data contains `slot`, treat it as a preferred placement anchor for consistency, not as an absolute restriction.
-3. If location data contains `available_slots`, treat them as typical anchor references rather than a complete map of all valid positions.
-4. When the panel description, source text, action flow, or scene nature implies movement, entry/exit, path traversal, transition space, temporary space, empty space, or abstract/non-literal space, do not force the character to remain inside an existing slot.
-5. Use reference images for style/identity consistency only.
-6. Repaint the background according to shot type and angle.
-7. If storyboard conflicts with source text, keep narrative logic from source text.
-8. Keep final visual style consistent with provided references.
+2. The shot size in shot_type directly controls character scale in the frame — do not deviate.
+3. If storyboard data contains `slot`, treat it as a preferred placement anchor for consistency, not as an absolute restriction.
+4. If location data contains `available_slots`, treat them as typical anchor references rather than a complete map of all valid positions.
+5. When the panel description, source text, action flow, or scene nature implies movement, entry/exit, path traversal, transition space, temporary space, empty space, or abstract/non-literal space, do not force the character to remain inside an existing slot.
+6. Use reference images for style/identity consistency only.
+7. Repaint the background according to shot type and angle.
+8. If storyboard conflicts with source text, keep narrative logic from source text.
+9. Keep final visual style consistent with provided references.
