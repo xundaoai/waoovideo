@@ -76,6 +76,16 @@ function withFlowFields(jobData: TaskJobData, payload?: Record<string, unknown> 
       base[key] = value
     }
   }
+  // Preserve meta.locale from original task payload to prevent TASK_LOCALE_REQUIRED on re-enqueue
+  const jobPayload = toObject(jobData.payload)
+  const jobMeta = toObject(jobPayload.meta)
+  const originalLocale = readStringField(jobMeta, 'locale')
+  if (originalLocale) {
+    const baseMeta = toObject(base.meta)
+    if (!readStringField(baseMeta, 'locale')) {
+      base.meta = { ...baseMeta, locale: originalLocale }
+    }
+  }
   return base
 }
 

@@ -260,13 +260,13 @@ export function arkResponsesStream(options: ArkResponsesOptions & { temperature?
             const errorText = await response.text()
             const err = new Error(`Ark Responses 调用失败: ${response.status} - ${errorText}`)
             rejectResult(err)
-            throw err
+            return
         }
 
         if (!response.body) {
             const err = new Error('Ark Responses: response body is null')
             rejectResult(err)
-            throw err
+            return
         }
 
         const reader = response.body.getReader()
