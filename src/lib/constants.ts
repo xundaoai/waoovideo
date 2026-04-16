@@ -162,6 +162,13 @@ export const ART_STYLES = [
     preview: '实',
     promptZh: '真实电影级画面质感，真实现实场景，色彩饱满通透，画面干净精致，真实感',
     promptEn: 'Realistic cinematic look, real-world scene fidelity, rich transparent colors, clean and refined image quality.'
+  },
+  {
+    value: 'chibi',
+    label: 'Q版风格',
+    preview: 'Q',
+    promptZh: 'Q版超变形比例，严格的二头身比例（头部占身高的二分之一），头部巨大圆润，身体短小紧凑，四肢粗短圆润如小馒头，手部脚部极简化，整体呈现极度夸张变形的超可爱chibi风格。禁止正常人体比例，禁止拉长四肢，禁止修长身材。',
+    promptEn: 'Super-deformed chibi style, strict 2-head body ratio (head equals half the total height), huge round head, tiny compact body, stubby round limbs like little buns, extremely simplified hands and feet, overall exaggerated deformed super cute chibi look. No normal human proportions, no elongated limbs, no slender body.'
   }
 ]
 
@@ -189,7 +196,10 @@ export function getArtStylePrompt(
 }
 
 // 角色形象生成的系统后缀（始终添加到提示词末尾，不显示给用户）- 左侧面部特写+右侧三视图
-export const CHARACTER_PROMPT_SUFFIX = '角色设定图，画面分为左右两个区域：【左侧区域】占约1/3宽度，是角色的正面特写（如果是人类则展示完整正脸，如果是动物/生物则展示最具辨识度的正面形态）；【右侧区域】占约2/3宽度，是角色三视图横向排列（从左到右依次为：正面全身、侧面全身、背面全身），三视图高度一致。纯白色背景，无其他元素。'
+export const CHARACTER_PROMPT_SUFFIX = '角色设定图，画面分为左右两个区域：【左侧区域】占约1/3宽度，是角色的正面特写（如果是人类则展示完整正脸，如果是动物/生物则展示最具辨识度的正面形态）；【右侧区域】占约2/3宽度，是角色三视图横向排列（从左到右依次为：正面全身、侧面全身、背面全身），三视图高度一致。纯白色背景，无其他元素。严格保持提示词中描述的角色身体比例风格（如Q版二头身、三头身等特殊比例，不得调整为正常人体比例）。'
+
+// Q版专用后缀 — 避免"全身"等暗示正常比例的词汇
+export const CHARACTER_CHIBI_PROMPT_SUFFIX = 'Q版角色设定图，画面分为左右两个区域：【左侧区域】占约1/3宽度，是角色的正面特写（大头圆脸，五官紧凑）；【右侧区域】占约2/3宽度，是角色三视图横向排列（从左到右依次为：正面形象、侧面形象、背面形象），三视图高度一致。纯白色背景，无其他元素。必须严格保持二头身Q版比例：头部巨大占身体一半，躯干短小圆润，四肢粗短如小馒头。'
 
 // 道具图片生成的系统后缀（固定白底三视图资产图）
 export const PROP_PROMPT_SUFFIX = '道具设定图，画面分为左右两个区域：【左侧区域】占约1/3宽度，是道具主体的主视图特写；【右侧区域】占约2/3宽度，是同一道具的三视图横向排列（从左到右依次为：正面、侧面、背面），三视图高度一致。纯白色背景，主体居中完整展示，无人物、无手部、无桌面陈设、无环境背景、无其他元素。'
@@ -219,14 +229,30 @@ export const LOCATION_IMAGE_BANANA_RATIO = '1:1'
 // 从提示词中移除角色系统后缀（用于显示给用户）
 export function removeCharacterPromptSuffix(prompt: string): string {
   if (!prompt) return ''
-  return prompt.replace(CHARACTER_PROMPT_SUFFIX, '').trim()
+  return prompt
+    .replace(CHARACTER_CHIBI_PROMPT_SUFFIX, '')
+    .replace(CHARACTER_PROMPT_SUFFIX, '')
+    .trim()
 }
 
 // 添加角色系统后缀到提示词（用于生成图片）
-export function addCharacterPromptSuffix(prompt: string): string {
-  if (!prompt) return CHARACTER_PROMPT_SUFFIX
+export function addCharacterPromptSuffix(prompt: string, artStyle?: string | null): string {
+  const suffix = artStyle === 'chibi' ? CHARACTER_CHIBI_PROMPT_SUFFIX : CHARACTER_PROMPT_SUFFIX
+  if (!prompt) return suffix
   const cleanPrompt = removeCharacterPromptSuffix(prompt)
-  return `${cleanPrompt}${cleanPrompt ? '，' : ''}${CHARACTER_PROMPT_SUFFIX}`
+  return `${cleanPrompt}${cleanPrompt ? '，' : ''}${suffix}`
+}
+
+// 构建完整的角色图片生成 prompt（风格前置 + 用户描述 + 系统后缀）
+export function buildCharacterImagePrompt(raw: string, artStylePrompt?: string | null, artStyleValue?: string | null): string {
+  const suffix = artStyleValue === 'chibi' ? CHARACTER_CHIBI_PROMPT_SUFFIX : CHARACTER_PROMPT_SUFFIX
+  const cleanPrompt = removeCharacterPromptSuffix(raw)
+  const parts: string[] = []
+  // 风格放最前面，增加权重
+  if (artStylePrompt) parts.push(artStylePrompt)
+  if (cleanPrompt) parts.push(cleanPrompt)
+  parts.push(suffix)
+  return parts.join('，')
 }
 
 export function removePropPromptSuffix(prompt: string): string {

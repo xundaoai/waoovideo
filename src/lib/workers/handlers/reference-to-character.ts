@@ -9,7 +9,7 @@ import { executeAiVisionStep } from '@/lib/ai-runtime'
 import { getUserModelConfig } from '@/lib/config-service'
 import {
   CHARACTER_IMAGE_BANANA_RATIO,
-  addCharacterPromptSuffix,
+  buildCharacterImagePrompt,
   getArtStylePrompt,
 } from '@/lib/constants'
 import { encodeImageUrls } from '@/lib/contracts/image-urls-contract'
@@ -203,10 +203,7 @@ export async function handleReferenceToCharacterTask(job: Job<TaskJobData>) {
     promptId: PROMPT_IDS.CHARACTER_REFERENCE_TO_SHEET,
     locale: job.data.locale,
   })
-  let prompt = addCharacterPromptSuffix(basePrompt)
-  if (artStylePrompt) {
-    prompt = `${prompt}，${artStylePrompt}`
-  }
+  const prompt = buildCharacterImagePrompt(basePrompt, artStylePrompt, artStyle)
 
   const useReferenceImages = !customDescription
   const { apiKey: falApiKey } = await getProviderConfig(job.data.userId, 'fal')
