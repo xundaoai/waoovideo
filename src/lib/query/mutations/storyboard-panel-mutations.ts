@@ -108,6 +108,33 @@ export function useDownloadProjectImages(projectId: string) {
 }
 
 /**
+ * 更新分镜 panel duration
+ */
+
+export function useUpdatePanelDuration(projectId: string | null) {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async ({ panelId, duration }: { panelId: string; duration: number | null }) => {
+            if (!projectId) throw new Error('Project ID is required')
+            return await requestJsonWithError(
+                `/api/novel-promotion/${projectId}/panel`,
+                {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ panelId, duration }),
+                },
+                '更新时长失败',
+            )
+        },
+        onSettled: () => {
+            if (!projectId) return
+            invalidateQueryTemplates(queryClient, [queryKeys.projectAssets.all(projectId)])
+        },
+    })
+}
+
+/**
  * 更新分镜 panel
  */
 

@@ -62,4 +62,5 @@ export const TEMPLATE_PLACEHOLDER_ALLOWLIST = new Set([
   'resolution',
   'size',
   'task_id',
+  'last_frame_image_url',
 ])

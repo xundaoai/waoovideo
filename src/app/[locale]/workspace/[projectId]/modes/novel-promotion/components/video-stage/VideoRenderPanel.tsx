@@ -22,14 +22,23 @@ interface VideoRenderPanelProps {
   flModel: string
   flModelOptions: VideoModelOption[]
   flGenerationOptions: VideoGenerationOptions
-  flCapabilityFields: Array<{
+  getFlGenerationOptions?: (panelKey: string) => VideoGenerationOptions
+  flCapabilityFields?: Array<{
     field: string
     label: string
     options: CapabilityValue[]
     disabledOptions?: CapabilityValue[]
     value: CapabilityValue | undefined
   }>
-  flMissingCapabilityFields: string[]
+  getFlCapabilityFields?: (panelKey: string) => Array<{
+    field: string
+    label: string
+    options: CapabilityValue[]
+    disabledOptions?: CapabilityValue[]
+    value: CapabilityValue | undefined
+  }>
+  flMissingCapabilityFields?: string[]
+  getFlMissingCapabilityFields?: (panelKey: string) => string[]
   flCustomPrompts: Map<string, string>
   onGenerateVideo: (
     storyboardId: string,
@@ -43,7 +52,7 @@ interface VideoRenderPanelProps {
   onLipSync: (storyboardId: string, panelIndex: number, voiceLineId: string, panelId?: string) => Promise<void>
   onToggleLink: (panelKey: string, storyboardId: string, panelIndex: number) => Promise<void>
   onFlModelChange: (model: string) => void
-  onFlCapabilityChange: (field: string, rawValue: string) => void
+  onFlCapabilityChange: (panelKey: string, field: string, rawValue: string) => void
   onFlCustomPromptChange: (key: string, value: string) => void
   onResetFlPrompt: (key: string) => void
   onGenerateFirstLastFrame: (
@@ -89,8 +98,9 @@ export default function VideoRenderPanel({
   flModel,
   flModelOptions,
   flGenerationOptions,
-  flCapabilityFields,
-  flMissingCapabilityFields,
+  getFlGenerationOptions,
+  getFlCapabilityFields,
+  getFlMissingCapabilityFields,
   flCustomPrompts,
   onGenerateVideo,
   onUpdatePanelVideoModel,
@@ -167,9 +177,9 @@ export default function VideoRenderPanel({
                 hasNext={hasNext}
                 flModel={flModel}
                 flModelOptions={flModelOptions}
-                flGenerationOptions={flGenerationOptions}
-                flCapabilityFields={flCapabilityFields}
-                flMissingCapabilityFields={flMissingCapabilityFields}
+                flGenerationOptions={getFlGenerationOptions ? getFlGenerationOptions(panelKey) : flGenerationOptions}
+                flCapabilityFields={getFlCapabilityFields!(panelKey)}
+                flMissingCapabilityFields={getFlMissingCapabilityFields!(panelKey)}
                 flCustomPrompt={flCustomPrompts.get(panelKey) || panel.firstLastFramePrompt || ''}
                 defaultFlPrompt={defaultFlPrompt}
                 localPrompt={localPrompt}

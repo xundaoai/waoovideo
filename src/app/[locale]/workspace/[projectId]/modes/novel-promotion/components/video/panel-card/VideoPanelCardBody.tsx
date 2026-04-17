@@ -153,7 +153,7 @@ export default function VideoPanelCardBody({ runtime }: VideoPanelCardBodyProps)
                         disabledOptions: field.disabledOptions,
                       }))}
                       capabilityOverrides={layout.flGenerationOptions}
-                      onCapabilityChange={(field, rawValue) => actions.onFlCapabilityChange(field, rawValue)}
+                      onCapabilityChange={(field, rawValue) => actions.onFlCapabilityChange(panelKey, field, rawValue)}
                       placeholder={t('panelCard.selectModel')}
                     />
                   </div>

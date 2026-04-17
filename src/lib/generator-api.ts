@@ -258,6 +258,7 @@ export async function generateVideo(
             modelKey: selection.modelKey,
             imageUrl,
             prompt: prompt || '',
+            lastFrameImageUrl: providerOptions.lastFrameImageUrl as string | undefined,
             options: {
                 ...providerOptions,
                 provider: selection.provider,

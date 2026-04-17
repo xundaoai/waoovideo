@@ -48,7 +48,7 @@ export interface VideoPanelCardShellProps {
   onUpdatePanelVideoModel: (storyboardId: string, panelIndex: number, model: string) => void
   onToggleLink: (panelKey: string, storyboardId: string, panelIndex: number) => void
   onFlModelChange: (model: string) => void
-  onFlCapabilityChange: (field: string, rawValue: string) => void
+  onFlCapabilityChange: (panelKey: string, field: string, rawValue: string) => void
   onFlCustomPromptChange: (panelKey: string, value: string) => void
   onResetFlPrompt: (panelKey: string) => void
   onGenerateFirstLastFrame: (

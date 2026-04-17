@@ -7,11 +7,15 @@ import {
   resolveEffectiveVideoCapabilityFields,
 } from '@/lib/model-capabilities/video-effective'
 import { projectVideoPricingTiersByFixedSelections } from '@/lib/model-pricing/video-tier'
+import { useUpdatePanelDuration } from '@/lib/query/hooks'
 
 interface UsePanelVideoModelParams {
   defaultVideoModel: string
   capabilityOverrides?: CapabilitySelections
   userVideoModels?: VideoModelOption[]
+  projectId?: string
+  panelId?: string
+  panelDuration?: number
 }
 
 interface CapabilityField {
@@ -67,11 +71,20 @@ export function usePanelVideoModel({
   defaultVideoModel,
   capabilityOverrides,
   userVideoModels,
+  projectId,
+  panelId,
+  panelDuration,
 }: UsePanelVideoModelParams) {
   const [selectedModel, setSelectedModel] = useState(defaultVideoModel || '')
-  const [generationOptions, setGenerationOptions] = useState<VideoGenerationOptions>(() =>
-    readSelectionForModel(capabilityOverrides, defaultVideoModel || ''),
-  )
+  const [generationOptions, setGenerationOptions] = useState<VideoGenerationOptions>(() => {
+    const baseSelections = readSelectionForModel(capabilityOverrides, defaultVideoModel || '')
+    // 🔥 优先使用 panel.duration 的值（如果存在且有效）
+    if (typeof panelDuration === 'number' && panelDuration > 0) {
+      return { ...baseSelections, duration: panelDuration }
+    }
+    return baseSelections
+  })
+  const updatePanelDurationMutation = useUpdatePanelDuration(projectId || null)
   const videoModelOptions = userVideoModels ?? []
   const selectedOption = videoModelOptions.find((option) => option.value === selectedModel)
   const pricingTiers = useMemo(
@@ -117,12 +130,19 @@ export function usePanelVideoModel({
   )
 
   useEffect(() => {
-    setGenerationOptions(normalizeVideoGenerationSelections({
-      definitions: capabilityDefinitions,
-      pricingTiers,
-      selection: selectedModelOverrides,
-    }))
-  }, [selectedModel, selectedModelOverridesSignature, capabilityDefinitions, pricingTiers, selectedModelOverrides])
+    setGenerationOptions((previous) => {
+      const normalized = normalizeVideoGenerationSelections({
+        definitions: capabilityDefinitions,
+        pricingTiers,
+        selection: selectedModelOverrides,
+      })
+      // 🔥 如果 panel.duration 存在，保留它不被覆盖
+      if (typeof panelDuration === 'number' && panelDuration > 0) {
+        return { ...normalized, duration: panelDuration }
+      }
+      return normalized
+    })
+  }, [selectedModel, selectedModelOverridesSignature, capabilityDefinitions, pricingTiers, selectedModelOverrides, panelDuration])
 
   useEffect(() => {
     setGenerationOptions((previous) => normalizeVideoGenerationSelections({
@@ -188,6 +208,14 @@ export function usePanelVideoModel({
         pinnedFields: [field],
       }),
     }))
+
+    // 🔥 同步 duration 到数据库
+    if (field === 'duration' && projectId && panelId) {
+      updatePanelDurationMutation.mutate({
+        panelId,
+        duration: typeof parsedValue === 'number' ? parsedValue : null,
+      })
+    }
   }
 
   return {

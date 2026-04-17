@@ -86,7 +86,7 @@ function validateFirstLastFrameModel(input: unknown) {
   }
 
   const capabilities = resolveBuiltinCapabilitiesByModelKey('video', flModel)
-  if (capabilities?.video?.firstlastframe !== true) {
+  if (capabilities && capabilities?.video?.firstlastframe !== true) {
     throw new ApiError('INVALID_PARAMS', {
       code: 'FIRSTLASTFRAME_MODEL_UNSUPPORTED',
       field: 'firstLastFrame.flModel',

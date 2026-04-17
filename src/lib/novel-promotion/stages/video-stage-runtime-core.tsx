@@ -387,8 +387,9 @@ export function useVideoStageRuntime({
     flModel,
     flModelOptions,
     flGenerationOptions,
-    flCapabilityFields,
-    flMissingCapabilityFields,
+    getFlGenerationOptions,
+    getFlCapabilityFields,
+    getFlMissingCapabilityFields,
     flCustomPrompts,
     setFlModel,
     setFlCapabilityValue,
@@ -402,6 +403,7 @@ export function useVideoStageRuntime({
     allPanels,
     linkedPanels,
     videoModelOptions: allVideoModelOptions,
+    projectId,
     onGenerateVideo: handleGenerateVideoWithImmediateLock,
     t: (key) => t(key as never),
   })
@@ -552,8 +554,9 @@ export function useVideoStageRuntime({
         flModel={flModel}
         flModelOptions={flModelOptions}
         flGenerationOptions={flGenerationOptions}
-        flCapabilityFields={flCapabilityFields}
-        flMissingCapabilityFields={flMissingCapabilityFields}
+        getFlGenerationOptions={getFlGenerationOptions}
+        getFlCapabilityFields={getFlCapabilityFields}
+        getFlMissingCapabilityFields={getFlMissingCapabilityFields}
         flCustomPrompts={flCustomPrompts}
         onGenerateVideo={handleGenerateVideoWithImmediateLock}
         onUpdatePanelVideoModel={onUpdatePanelVideoModel}

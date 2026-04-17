@@ -148,6 +148,7 @@ export {
     useUpdateProjectPanelActingNotes,
     useListProjectEpisodeVideoUrls,
     useUpdateProjectPanelLink,
+    useUpdatePanelDuration,
     useListProjectEpisodes,
     useSplitProjectEpisodes,
     useSplitProjectEpisodesByMarkers,

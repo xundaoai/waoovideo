@@ -30,6 +30,7 @@ export interface OpenAICompatVideoRequest {
   modelId?: string
   imageUrl: string
   prompt: string
+  lastFrameImageUrl?: string
   options?: Record<string, unknown>
   profile: OpenAICompatVideoProfile
   template?: import('@/lib/openai-compat-media-template').OpenAICompatMediaTemplate

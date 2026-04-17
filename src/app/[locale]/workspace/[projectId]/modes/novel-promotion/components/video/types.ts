@@ -83,6 +83,7 @@ export interface VideoPanel {
   storyboardId: string
   panelIndex: number
   textPanel?: TextPanel
+  duration?: number  // 视频时长（秒）
   firstLastFramePrompt?: string
   imageUrl?: string
   videoUrl?: string

@@ -152,6 +152,7 @@ export async function generateVideoViaOpenAICompat(request: OpenAICompatVideoReq
     modelId,
     imageUrl,
     prompt,
+    lastFrameImageUrl,
     options = {},
   } = request
 
@@ -168,12 +169,20 @@ export async function generateVideoViaOpenAICompat(request: OpenAICompatVideoReq
   }
 
   const inputReference = await toUploadFileFromImageUrl(imageUrl)
+
+  let lastFrameImageValue: string | undefined
+  if (lastFrameImageUrl) {
+    const base64DataUrl = lastFrameImageUrl.startsWith('data:') ? lastFrameImageUrl : await normalizeToBase64ForGeneration(lastFrameImageUrl)
+    lastFrameImageValue = base64DataUrl
+  }
+
   const response = await client.videos.create({
     prompt: trimmedPrompt,
     model: selectedModelId,
     ...(seconds ? { seconds } : {}),
     ...(size ? { size } : {}),
     input_reference: inputReference,
+    ...(lastFrameImageValue ? { last_frame_image: lastFrameImageValue } : {}),
   } as Parameters<typeof client.videos.create>[0])
 
   if (!response.id || typeof response.id !== 'string') {

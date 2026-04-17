@@ -74,6 +74,7 @@ export function useVideoPanelsProjection({
             video_prompt: panel.videoPrompt || undefined,
             videoModel: panel.videoModel || undefined,
           },
+          duration: panel.duration ?? undefined,
           imageUrl: panel.imageUrl || undefined,
           firstLastFramePrompt: panel.firstLastFramePrompt || undefined,
           videoUrl: panel.videoUrl || undefined,

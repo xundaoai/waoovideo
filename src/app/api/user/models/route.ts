@@ -219,6 +219,8 @@ export const GET = apiHandler(async () => {
       const capabilities = findBuiltinCapabilities(modelType, provider, modelId)
       if (capabilities) {
         option.capabilities = capabilities
+      } else if (modelType === 'video') {
+        option.capabilities = { video: { durationOptions: [3, 5, 8, 10], firstlastframe: true } }
       }
 
       if (modelType === 'video') {

@@ -229,7 +229,7 @@ export const PATCH = apiHandler(async (
   const panelModel = prisma.novelPromotionPanel as unknown as {
     create: (args: { data: Record<string, unknown> }) => Promise<unknown>
   }
-  const { panelId, storyboardId, panelIndex, videoPrompt, firstLastFramePrompt } = body
+  const { panelId, storyboardId, panelIndex, videoPrompt, firstLastFramePrompt, duration } = body
 
   // 🔥 方式1：通过 panelId 直接更新（优先）
   if (panelId) {
@@ -245,9 +245,11 @@ export const PATCH = apiHandler(async (
     const updateData: {
       videoPrompt?: string | null
       firstLastFramePrompt?: string | null
+      duration?: number | null
     } = {}
     if (videoPrompt !== undefined) updateData.videoPrompt = videoPrompt
     if (firstLastFramePrompt !== undefined) updateData.firstLastFramePrompt = firstLastFramePrompt
+    if (duration !== undefined) updateData.duration = parseNullableNumberField(duration)
 
     await prisma.novelPromotionPanel.update({
       where: { id: panelId },
@@ -275,12 +277,16 @@ export const PATCH = apiHandler(async (
   const updateData: {
     videoPrompt?: string | null
     firstLastFramePrompt?: string | null
+    duration?: number | null
   } = {}
   if (videoPrompt !== undefined) {
     updateData.videoPrompt = videoPrompt
   }
   if (firstLastFramePrompt !== undefined) {
     updateData.firstLastFramePrompt = firstLastFramePrompt
+  }
+  if (duration !== undefined) {
+    updateData.duration = parseNullableNumberField(duration)
   }
 
   // 尝试更新 Panel

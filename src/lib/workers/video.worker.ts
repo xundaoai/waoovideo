@@ -120,7 +120,7 @@ async function generateVideoForPanel(
         ? firstLastFramePayload.flModel
         : modelId
     const firstLastFrameCapabilities = resolveBuiltinCapabilitiesByModelKey('video', model)
-    if (firstLastFrameCapabilities?.video?.firstlastframe !== true) {
+    if (firstLastFrameCapabilities && firstLastFrameCapabilities?.video?.firstlastframe !== true) {
       throw new Error(`VIDEO_FIRSTLASTFRAME_MODEL_UNSUPPORTED: ${model}`)
     }
     if (
