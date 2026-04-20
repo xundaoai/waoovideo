@@ -257,7 +257,7 @@ export class ArkImageGenerator extends BaseImageGenerator {
             stream: false
             watermark: false
             size?: string
-            image?: string[]
+            reference_images?: string | string[]
         } = {
             model: modelId,
             prompt: prompt,
@@ -272,7 +272,8 @@ export class ArkImageGenerator extends BaseImageGenerator {
         }
 
         if (base64Images.length > 0) {
-            requestBody.image = base64Images
+            // Ark Seedream API: 单图传 string，多图传 array
+            requestBody.reference_images = base64Images.length === 1 ? base64Images[0] : base64Images
         }
 
         // 调用 ARK API

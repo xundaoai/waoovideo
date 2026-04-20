@@ -16,6 +16,7 @@ Reference image rules:
 - Scene references: use only for layout style and atmosphere; repaint for the current shot.
 - Repaint the background according to shot type and angle.
 - Close-up/detail shots should use blurred or minimal backgrounds.
+- Prop references: use for prop appearance, material, proportions and details. Props held or interacted with by characters must match the reference images.
 
 [Shot Composition Rules - Control the Image Directly]
 

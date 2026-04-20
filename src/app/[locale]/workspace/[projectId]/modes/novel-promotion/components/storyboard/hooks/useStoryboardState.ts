@@ -13,6 +13,17 @@ import {
   sortStoryboardsByClipOrder,
 } from './storyboard-state-utils'
 
+function parsePropsArray(value: string | null | undefined): string[] {
+  if (!value) return []
+  try {
+    const parsed = JSON.parse(value)
+    if (!Array.isArray(parsed)) return []
+    return parsed.filter((item): item is string => typeof item === 'string')
+  } catch {
+    return []
+  }
+}
+
 export interface StoryboardPanel {
   id: string
   panelIndex: number
@@ -22,6 +33,7 @@ export interface StoryboardPanel {
   description: string
   characters: { name: string; appearance: string; slot?: string }[]
   location?: string
+  props?: string | null
   srt_range?: string
   duration?: number
   video_prompt?: string
@@ -164,6 +176,7 @@ export function useStoryboardState({
       description: panel.description,
       location: panel.location || null,
       characters: panel.characters || [],
+      props: parsePropsArray(panel.props),
       srtStart: null,
       srtEnd: null,
       duration: panel.duration || null,

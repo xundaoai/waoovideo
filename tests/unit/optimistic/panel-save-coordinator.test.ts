@@ -15,6 +15,7 @@ function buildSnapshot(description: string): PanelEditData {
     description,
     location: null,
     characters: [],
+    props: [],
     srtStart: null,
     srtEnd: null,
     duration: null,

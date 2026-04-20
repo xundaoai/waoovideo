@@ -113,6 +113,18 @@ export default function PanelEditFormV2({
       </GlassField>
 
       <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
+        <GlassField label={t('panel.propsLabel')}>
+          {panelData.props.length > 0 ? (
+            <div className="flex flex-wrap gap-1.5">
+              {panelData.props.map((prop, index) => (
+                <GlassChip key={`${prop}-${index}`} tone="warning">{prop}</GlassChip>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-[var(--glass-text-tertiary)]">{t('panel.noProps')}</p>
+          )}
+        </GlassField>
+
         <GlassField
           label={t('panel.locationLabel')}
           actions={

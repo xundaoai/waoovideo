@@ -112,6 +112,8 @@
         "locationNotEdited": "Location not edited yet",
         "noCharacters": "No characters selected",
         "charactersNotEdited": "Characters not edited yet",
+        "propsLabel": "Props",
+        "noProps": "No props in this shot",
         "shotTypePlaceholder": "Overhead medium shot...",
         "cameraMovePlaceholder": "Slow push, static...",
         "videoPromptPlaceholder": "Prompt for video generation...",

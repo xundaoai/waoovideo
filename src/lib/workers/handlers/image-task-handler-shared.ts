@@ -36,6 +36,7 @@ interface LocationImageLike {
 
 interface LocationLike {
   name: string
+  assetKind?: string
   images?: LocationImageLike[]
 }
 
@@ -49,6 +50,7 @@ interface PanelLike {
   sketchImageUrl?: string | null
   characters?: string | null
   location?: string | null
+  props?: string | null
 }
 
 export interface PanelCharacterReference {
@@ -257,6 +259,22 @@ export async function collectPanelReferenceImages(projectData: NovelProjectData,
       const selected = images.find((img) => img.isSelected) || images[0]
       const signed = toSignedUrlIfCos(selected?.imageUrl, 3600)
       if (signed) refs.push(signed)
+    }
+  }
+
+  // 收集道具参考图
+  if (panel.props) {
+    const propNames = parseJsonStringArray(panel.props)
+    for (const propName of propNames) {
+      const prop = (projectData.locations || []).find(
+        (loc) => loc.assetKind === 'prop' && loc.name.toLowerCase() === propName.toLowerCase()
+      )
+      if (prop) {
+        const images = prop.images || []
+        const selected = images.find((img) => img.isSelected) || images[0]
+        const signed = toSignedUrlIfCos(selected?.imageUrl, 3600)
+        if (signed) refs.push(signed)
+      }
     }
   }
 

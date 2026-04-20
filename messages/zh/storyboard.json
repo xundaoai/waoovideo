@@ -112,6 +112,8 @@
         "locationNotEdited": "暂未编辑场景",
         "noCharacters": "未选择角色",
         "charactersNotEdited": "暂未编辑角色",
+        "propsLabel": "道具",
+        "noProps": "此镜头无道具",
         "shotTypePlaceholder": "俯拍中景...",
         "cameraMovePlaceholder": "缓推、固定...",
         "videoPromptPlaceholder": "用于视频生成的提示词...",

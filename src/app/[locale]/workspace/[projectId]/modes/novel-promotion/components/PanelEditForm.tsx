@@ -22,6 +22,7 @@ export interface PanelEditData {
   description: string | null
   location: string | null
   characters: { name: string; appearance: string; slot?: string }[]
+  props: string[]
   srtStart: number | null
   srtEnd: number | null
   duration: number | null

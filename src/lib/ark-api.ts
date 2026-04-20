@@ -55,7 +55,7 @@ interface ArkImageGenerationRequest {
     size?: string  // 支持 '1K' | '2K' | '4K' 或具体像素值如 '2560x1440'
     aspect_ratio?: string  // 宽高比如 '3:2', '16:9', '1:1'
     watermark?: boolean
-    image?: string[]  // 图生图时的参考图片
+    reference_images?: string | string[]  // 图生图时的参考图片（单张传 string，多张传 array）
     sequential_image_generation?: 'enabled' | 'disabled'
     stream?: boolean
 }
@@ -441,7 +441,7 @@ export async function arkImageGeneration(
         size: request.size,
         aspect_ratio: request.aspect_ratio,
         watermark: request.watermark,
-        imageCount: request.image?.length || 0,
+        imageCount: Array.isArray(request.reference_images) ? request.reference_images.length : (request.reference_images ? 1 : 0),
         promptLength: request.prompt?.length || 0
     }))
 

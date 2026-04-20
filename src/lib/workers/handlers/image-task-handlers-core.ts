@@ -335,7 +335,9 @@ export async function handleModifyAssetImageTask(job: Job<TaskJobData>) {
 
     const normalizedExtras = await normalizeReferenceImagesForGeneration(extraReferenceInputs)
     const uniqueReferences = Array.from(new Set([requiredReference, ...normalizedExtras]))
-    const prompt = `请根据以下指令修改分镜图片，保持镜头语言和主体一致：\n${modifyPrompt}`
+    const prompt = uniqueReferences.length > 1
+      ? `图一是当前分镜图片。请参考图二${normalizedExtras.length > 1 ? '及其他参考图' : ''}，根据以下指令修改图一，保持镜头语言和主体一致：\n${modifyPrompt}`
+      : `请根据以下指令修改分镜图片，保持镜头语言和主体一致：\n${modifyPrompt}`
     const source = await resolveImageSourceFromGeneration(job, {
       userId: job.data.userId,
       modelId: editModel,
